@@ -1,0 +1,22 @@
+= musicbrainz bookmarklets
+:author: Urs Roesch
+
+This is a collection of my personal bookmarklets for my personal use. Well
+actually at this point it is only one and honestly it is not very sophisticated.
+
+{% for bm in bookmarklets %}
+
+==  {{ bm['title'] }}
+
+{{ bm['summary'] }}
+
+{{ bm['description'] }}
+
+[source,javascript]
+----
+{{ bm['code'] }}
+----
+
+{% endfor %}
+
+// vim: set colorcolumn=80 textwidth=80 spell spelllang=en_us : 

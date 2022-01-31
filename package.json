@@ -1,0 +1,38 @@
+{
+  "type": "module",
+  "scripts": {
+    "build": "node build.js"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.16.12",
+    "@babel/preset-env": "^7.16.11",
+    "doctrine": "^3.0.0",
+    "prettier": "2.5.1",
+    "uglify-js": "^3.15.0"
+  },
+  "dependencies": {
+    "asciidoctor.js": "^1.5.9",
+    "jsdoc": "^3.6.10",
+    "liquidjs": "^9.34.0"
+  },
+  "name": "mb-bookmarklets",
+  "version": "0.0.1-alpha",
+  "description": "Personal bookmarklets helping with musicbrainz editing.",
+  "main": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uroesch/mb-bookmarklets.git"
+  },
+  "keywords": [
+    "musicbrainz",
+    "bookmarklets",
+    "javascript",
+    "helpers"
+  ],
+  "author": "Urs Roesch",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/uroesch/mb-bookmarklets/issues"
+  },
+  "homepage": "https://github.com/uroesch/mb-bookmarklets#readme"
+}
