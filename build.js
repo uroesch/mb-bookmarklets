@@ -61,10 +61,8 @@ function prettify() {
 function create_readme() {
   let doc_text = [];
   files().forEach((file) => {
-    console.log(parse_doc(file));
     doc_text.push(parse_doc(file));
   });
-  console.log(doc_text);
   const engine = new Liquid({
     root: path.resolve("templates"),
     extname: ".liquid",

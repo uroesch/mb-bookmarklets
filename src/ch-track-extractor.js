@@ -9,7 +9,7 @@
  *
  */
 javascript: (() => {
-  const VERSION = "0.0.2-alpha";
+  const VERSION = "0.0.3-alpha";
   const FONOTECA_LABEL = {
     "Audio track": "number", // English
     "Musical work title": "name", // English
@@ -74,17 +74,16 @@ javascript: (() => {
       for (let track of disc.getElementsByTagName("tr")) {
         elements = track.getElementsByTagName("td");
         first_cell = elements.length - 3;
-        number = elements[first_cell].textContent;
+        number = elements[first_cell].textContent.replace(/\.$/, "");
         name = elements[first_cell + 1].textContent.replace(
           /.*-\s+\d+\.\s+/,
           ""
         );
         duration = elements[first_cell + 2].textContent;
-        entry = { number, name, duration };
-        entries.push(entry);
+        entries.push({ number, name, duration });
       }
     }
-    return entries.join("\n");
+    return entries;
   }
 
   /** Extract release information from the cede.ch site. */
