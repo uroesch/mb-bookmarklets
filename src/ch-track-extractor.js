@@ -9,7 +9,33 @@
  *
  */
 javascript: (() => {
-  const version = "0.0.1-alpha";
+  const VERSION = "0.0.2-alpha";
+  const FONOTECA_LABEL = {
+    "Audio track": "number", // English
+    "Musical work title": "name", // English
+    Position: "number", // Deutsch
+    Musikwerktitel: "name", // Deutsch
+    "Traccia audio": "number", // Italiano
+    "Titolo dell'opera musicale": "name", // Italiano
+    "Plage audio": "number", // Français
+    "Titre de l'oeuvre musicale": "name", // Français
+    Pusiziun: "number", // Rumantsch
+    "Titel da l'ovra musicala": "name", // Rumantsch
+  };
+
+  /**
+   * Format the array of tracks into a text body.
+   */
+  function format_list(track_list) {
+    let text = "";
+    track_list.forEach((entry) => {
+      text += entry["number"].trim() + ". ";
+      text += entry["name"].trim() + " ";
+      text += entry["duration"] ? entry["duration"] : "??:??";
+      text += "\n";
+    });
+    return text;
+  }
 
   /**
    * Create a text area at the top of the page with given string in it.
@@ -30,6 +56,14 @@ javascript: (() => {
     text_area.select();
   }
 
+  /**
+   * Translate the label from any of the file languages found on fonoteca
+   * to a single keyword.
+   */
+  function fonoteca_label(label) {
+    return FONOTECA_LABEL[label] ?? null;
+  }
+
   /** Extract release information from the exlibris.ch site. */
   function parse_exlibris() {
     let entries = [];
@@ -46,7 +80,7 @@ javascript: (() => {
           ""
         );
         duration = elements[first_cell + 2].textContent;
-        entry = number.trim() + ". " + name.trim() + " " + duration.trim();
+        entry = { number, name, duration };
         entries.push(entry);
       }
     }
@@ -65,15 +99,40 @@ javascript: (() => {
       name = track
         .getElementsByClassName("trackname")[0]
         .firstChild.textContent.replace(/.*-\s+\d+\.\s+/, "");
-      entry = number + " " + name + " " + duration;
+      entry = { number, name, duration };
       entries.push(entry);
     }
-    return entries.join("\n");
+    return entries;
+  }
+
+  /** Extract release information from fonoteca.ch */
+  function parse_fonoteca() {
+    let elements = document.getElementsByClassName("tbl-detail-tdlft");
+    let entries = [];
+    let item = null;
+    for (i of elements) {
+      content = i.parentNode.getElementsByTagName("td");
+      label = fonoteca_label(content[0].innerText);
+      text = content[1].innerText;
+      if (!label) continue;
+      switch (label) {
+        case "number": {
+          item = item == null ? 0 : item + 1;
+          entries[item] = { number: text };
+          break;
+        }
+        case "name": {
+          entries[item]["name"] = text;
+          break;
+        }
+      }
+    }
+    return entries;
   }
 
   function main() {
     const site_name = window.location.hostname.replace(/.*\.(.*\..*)$/, "$1");
-    let track_list = "";
+    let track_list = [];
     switch (site_name) {
       case "cede.ch":
         track_list = parse_cede();
@@ -81,9 +140,13 @@ javascript: (() => {
       case "exlibris.ch":
         track_list = parse_exlibris();
         break;
+      case "fonoteca.ch":
+        track_list = parse_fonoteca();
+        break;
     }
-    console.log(track_list);
-    to_textarea(track_list);
+    let text_list = format_list(track_list);
+    console.log(text_list);
+    to_textarea(text_list);
   }
 
   main();
