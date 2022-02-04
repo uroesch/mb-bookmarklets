@@ -3,13 +3,12 @@
  * @summary Bookmarklet script for extracting track data from Swiss sites.
  *
  * @description Bookmarklet to extract track data a number of from Swiss sites.
- *   Currently supported are cede.ch and exlibris.ch. Support for fonoteca.ch
- *   is planced but not yet implemented. The code here is still alpha level
- *   quality! Use at your own risk.
+ *   Currently supported are cede.ch ,exlibris.ch and fonoteca.ch.
+ *   The code here is still alpha level quality! Use at your own risk.
  *
  */
 javascript: (() => {
-  const VERSION = "0.0.3-alpha";
+  const VERSION = "0.0.4-alpha";
   const FONOTECA_LABEL = {
     "Audio track": "number", // English
     "Musical work title": "name", // English
@@ -29,7 +28,7 @@ javascript: (() => {
   function format_list(track_list) {
     let text = "";
     track_list.forEach((entry) => {
-      text += entry["number"].trim() + ". ";
+      text += entry["number"].trim().replace(/\.$/, "") + ". ";
       text += entry["name"].trim() + " ";
       text += entry["duration"] ? entry["duration"] : "??:??";
       text += "\n";
@@ -74,7 +73,7 @@ javascript: (() => {
       for (let track of disc.getElementsByTagName("tr")) {
         elements = track.getElementsByTagName("td");
         first_cell = elements.length - 3;
-        number = elements[first_cell].textContent.replace(/\.$/, "");
+        number = elements[first_cell].textContent;
         name = elements[first_cell + 1].textContent.replace(
           /.*-\s+\d+\.\s+/,
           ""
@@ -98,8 +97,7 @@ javascript: (() => {
       name = track
         .getElementsByClassName("trackname")[0]
         .firstChild.textContent.replace(/.*-\s+\d+\.\s+/, "");
-      entry = { number, name, duration };
-      entries.push(entry);
+      entries.push({ number, name, duration });
     }
     return entries;
   }
