@@ -8,18 +8,23 @@
  *
  */
 javascript: (() => {
-  const VERSION = "0.0.4-alpha";
+  const VERSION = "0.0.5-alpha";
   const FONOTECA_LABEL = {
     "Audio track": "number", // English
     "Musical work title": "name", // English
+    "Work title": "name", //English
     Position: "number", // Deutsch
     Musikwerktitel: "name", // Deutsch
+    Werktitel: "name", // Deutsch
     "Traccia audio": "number", // Italiano
     "Titolo dell'opera musicale": "name", // Italiano
+    "Titolo dell'opera": "name", // Italiano
     "Plage audio": "number", // Français
     "Titre de l'oeuvre musicale": "name", // Français
+    "Titre de l'oeuvre": "name", // Français
     Pusiziun: "number", // Rumantsch
     "Titel da l'ovra musicala": "name", // Rumantsch
+    "Titel da l'ovra": "name", // Rumantsch
   };
 
   /**
@@ -28,6 +33,7 @@ javascript: (() => {
   function format_list(track_list) {
     let text = "";
     track_list.forEach((entry) => {
+      console.log(entry);
       text += entry["number"].trim().replace(/\.$/, "") + ". ";
       text += entry["name"].trim() + " ";
       text += entry["duration"] ? entry["duration"] : "??:??";
