@@ -8,7 +8,7 @@
  *
  */
 javascript: (() => {
-  const VERSION = "0.0.6-alpha";
+  const VERSION = "0.0.7-alpha";
   const FONOTECA_LABEL = {
     "Audio track": "number", // English
     "Musical work title": "name", // English
@@ -69,7 +69,16 @@ javascript: (() => {
     return FONOTECA_LABEL[label] ?? null;
   }
 
-  /** Extract release information from the exlibris.ch site. */
+  /**
+   * Get rid of the preamble in a track.
+   */
+  String.prototype.cleanTrack = function () {
+    return this.replace(/.*-\s+\d+[\.,]\s+/, "");
+  };
+
+  /**
+   * Extract release information from the exlibris.ch site.
+   */
   function parse_exlibris() {
     let entries = [];
     let discs = document
@@ -80,10 +89,7 @@ javascript: (() => {
         elements = track.getElementsByTagName("td");
         first_cell = elements.length - 3;
         number = elements[first_cell].textContent;
-        name = elements[first_cell + 1].textContent.replace(
-          /.*-\s+\d+[\.,]\s+/,
-          ""
-        );
+        name = elements[first_cell + 1].textContent.cleanTrack();
         duration = elements[first_cell + 2].textContent;
         entries.push({ number, name, duration });
       }
@@ -91,7 +97,9 @@ javascript: (() => {
     return entries;
   }
 
-  /** Extract release information from the cede.ch site. */
+  /**
+   * Extract release information from the cede.ch site.
+   */
   function parse_cede() {
     let entries = [];
     let tracks = document
@@ -102,7 +110,7 @@ javascript: (() => {
       duration = track.getElementsByClassName("duration")[0].textContent;
       name = track
         .getElementsByClassName("trackname")[0]
-        .firstChild.textContent.replace(/.*-\s+\d+\.\s+/, "");
+        .firstChild.textContent.cleanTrack();
       entries.push({ number, name, duration });
     }
     return entries;
