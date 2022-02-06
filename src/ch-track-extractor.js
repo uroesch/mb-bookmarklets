@@ -8,7 +8,7 @@
  *
  */
 javascript: (() => {
-  const VERSION = "0.0.7-alpha";
+  const VERSION = "0.0.8-alpha";
   const FONOTECA_LABEL = {
     "Audio track": "number", // English
     "Musical work title": "name", // English
@@ -30,9 +30,9 @@ javascript: (() => {
   /**
    * Format the array of tracks into a text body.
    */
-  function format_list(track_list) {
+  function formatList(trackList) {
     let text = "";
-    track_list.forEach((entry) => {
+    trackList.forEach((entry) => {
       console.log(entry);
       text += entry["number"].trim().replace(/\.$/, "") + ". ";
       text += entry["name"].trim() + " ";
@@ -46,26 +46,26 @@ javascript: (() => {
    * Create a text area at the top of the page with given string in it.
    * @param {string} text - Multiline string with extracted track information.
    */
-  function to_textarea(text) {
+  function toTextArea(text) {
     if (text === "") return "#";
-    let text_area = document.createElement("textarea");
-    text_area.value = text;
+    let textArea = document.createElement("textarea");
+    textArea.value = text;
 
     // Avoid scrolling to bottom
-    text_area.style.top = "0";
-    text_area.style.left = "0";
-    text_area.style.position = "fixed";
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.position = "fixed";
 
-    document.body.appendChild(text_area);
-    text_area.focus();
-    text_area.select();
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
   }
 
   /**
    * Translate the label from any of the file languages found on fonoteca
    * to a single keyword.
    */
-  function fonoteca_label(label) {
+  function fonotecaLabel(label) {
     return FONOTECA_LABEL[label] ?? null;
   }
 
@@ -79,18 +79,18 @@ javascript: (() => {
   /**
    * Extract release information from the exlibris.ch site.
    */
-  function parse_exlibris() {
-    let entries = [];
-    let discs = document
+  function parseExlibris() {
+    const entries = [];
+    const discs = document
       .getElementsByClassName("o-tracks")[0]
       .getElementsByTagName("table");
-    for (disc of discs) {
+    for (let disc of discs) {
       for (let track of disc.getElementsByTagName("tr")) {
         elements = track.getElementsByTagName("td");
-        first_cell = elements.length - 3;
-        number = elements[first_cell].textContent;
-        name = elements[first_cell + 1].textContent.cleanTrack();
-        duration = elements[first_cell + 2].textContent;
+        firstCell = elements.length - 3;
+        number = elements[firstCell].textContent;
+        name = elements[firstCell + 1].textContent.cleanTrack();
+        duration = elements[firstCell + 2].textContent;
         entries.push({ number, name, duration });
       }
     }
@@ -100,9 +100,9 @@ javascript: (() => {
   /**
    * Extract release information from the cede.ch site.
    */
-  function parse_cede() {
-    let entries = [];
-    let tracks = document
+  function parseCede() {
+    const entries = [];
+    const tracks = document
       .getElementById("player")
       .getElementsByClassName("track");
     for (let track of tracks) {
@@ -116,14 +116,16 @@ javascript: (() => {
     return entries;
   }
 
-  /** Extract release information from fonoteca.ch */
-  function parse_fonoteca() {
-    let elements = document.getElementsByClassName("tbl-detail-tdlft");
-    let entries = [];
+  /** 
+   * Extract release information from fonoteca.ch 
+   */
+  function parseFonoteca() {
     let item = null;
-    for (i of elements) {
-      content = i.parentNode.getElementsByTagName("td");
-      label = fonoteca_label(content[0].innerText);
+    const entries = [];
+    const tracks = document.getElementsByClassName("tbl-detail-tdlft");
+    for (let row of tracks) {
+      content = row.parentNode.getElementsByTagName("td");
+      label = fonotecaLabel(content[0].innerText);
       text = content[1].innerText;
       if (!label) continue;
       switch (label) {
@@ -142,23 +144,22 @@ javascript: (() => {
   }
 
   function main() {
-    const site_name = window.location.hostname.replace(/.*\.(.*\..*)$/, "$1");
-    let track_list = [];
-    switch (site_name) {
+    const siteName = window.location.hostname.replace(/.*\.(.*\..*)$/, "$1");
+    let trackList = [];
+    switch (siteName) {
       case "cede.ch":
-        track_list = parse_cede();
+        trackList = parseCede();
         break;
       case "exlibris.ch":
-        track_list = parse_exlibris();
+        trackList = parseExlibris();
         break;
       case "fonoteca.ch":
-        track_list = parse_fonoteca();
+        trackList = parseFonoteca();
         break;
     }
-    let text_list = format_list(track_list);
-    console.log(text_list);
-    to_textarea(text_list);
+    const textList = formatList(trackList);
+    console.log(textList);
+    toTextArea(textList);
   }
-
   main();
 })();
