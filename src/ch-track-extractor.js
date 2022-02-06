@@ -8,7 +8,7 @@
  *
  */
 javascript: (() => {
-  const VERSION = "0.0.5-alpha";
+  const VERSION = "0.0.6-alpha";
   const FONOTECA_LABEL = {
     "Audio track": "number", // English
     "Musical work title": "name", // English
@@ -81,7 +81,7 @@ javascript: (() => {
         first_cell = elements.length - 3;
         number = elements[first_cell].textContent;
         name = elements[first_cell + 1].textContent.replace(
-          /.*-\s+\d+\.\s+/,
+          /.*-\s+\d+[\.,]\s+/,
           ""
         );
         duration = elements[first_cell + 2].textContent;
