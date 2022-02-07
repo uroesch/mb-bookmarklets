@@ -36,8 +36,9 @@ javascript: (() => {
       console.log(entry);
       text += entry["number"].trim().replace(/\.$/, "") + ". ";
       text += entry["name"].trim() + " ";
+      text += "(";
       text += entry["duration"] ? entry["duration"] : "??:??";
-      text += "\n";
+      text += ")\n";
     });
     return text;
   }
@@ -116,8 +117,8 @@ javascript: (() => {
     return entries;
   }
 
-  /** 
-   * Extract release information from fonoteca.ch 
+  /**
+   * Extract release information from fonoteca.ch
    */
   function parseFonoteca() {
     let item = null;
