@@ -13,7 +13,7 @@
   "dependencies": {
     "asciidoctor.js": "^1.5.9",
     "jsdoc": "^3.6.10",
-    "liquidjs": "^9.34.0"
+    "liquidjs": "^10.0.0"
   },
   "name": "mb-bookmarklets",
   "version": "0.0.8-alpha",
